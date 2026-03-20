@@ -205,6 +205,8 @@ Content Autopilotが自律的に下す判断の一覧:
 
 > 実際のダッシュボードはCSSアニメーション付き。スコアバーがスライドイン、カードがフェードインします。
 
+![Dashboard Screenshot](docs/dashboard-screenshot.png)
+
 ---
 
 ## 129 Skills 一覧
