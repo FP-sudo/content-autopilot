@@ -121,7 +121,7 @@ Claude Code plugin for fully autonomous content creation.<br>
 
 ## Demo Video
 
-[3分デモ動画](./DEMO_SCRIPT.md) — 撮影手順とナレーション台本
+> デモ動画は準備中です。[撮影ガイド](./DEMO_SCRIPT.md)にナレーション台本・操作手順があります。
 
 ---
 
@@ -397,12 +397,6 @@ python3 run_pipeline.py
 ```bash
 python3 test_scripts.py  # 23テスト全通過を確認
 ```
-
----
-
-## Demo Video
-
-> デモ動画は準備中です。[撮影ガイド](./DEMO_SCRIPT.md)にナレーション台本・操作手順があります。
 
 ---
 
