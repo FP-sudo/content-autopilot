@@ -77,7 +77,7 @@ Claude Code plugin for fully autonomous content creation.<br>
                                               v
                                     [Quality Gate 6-axis]
                                          |         |
-                                    score>=70   score<70
+                                    score>=75   score<75
                                          |         |
                                          |    auto-improve
                                          |    (max 2 rounds)
@@ -111,7 +111,7 @@ Claude Code plugin for fully autonomous content creation.<br>
 # 3. ファネル分析でトピック自動選択
 # 4. note / X / Instagram 向けコンテンツ同時生成
 # 5. 6軸品質採点（日本語ネイティブチェック含む）
-# 6. スコア70未満 → 自動改善（最大2ラウンド）
+# 6. スコア75未満 → 自動改善（最大2ラウンド）
 # 7. HTMLダッシュボードがブラウザで自動表示
 ```
 
@@ -130,7 +130,7 @@ Claude Code plugin for fully autonomous content creation.<br>
 Content Autopilotが自律的に下す判断の一覧:
 
 - **トピック選定**: WebSearchによるトレンド調査 + ファネルバランス分析で、何を書くべきかをシステムが決定
-- **品質の自己改善ループ**: 6軸採点でスコア70未満なら、具体的な修正指示を生成して自動改善（最大2ラウンド）
+- **品質の自己改善ループ**: 6軸採点でスコア75未満なら、具体的な修正指示を生成して自動改善（最大2ラウンド）
 - **フォールバック**: WebSearch失敗時はローカルのトピックライブラリから自動選択。外部依存でパイプラインは止まらない
 - **重複回避**: 同日に複数回実行した場合、自動サフィックスでファイル名を分離
 - **シリーズ継続追跡**: 進行中の連載がある場合、自動的に次回分を提案
@@ -276,7 +276,7 @@ content-history.json ──> funnel data ──>|
                                         v
                                grader.py (6-axis)
                                    |         |
-                              pass (>=70)  fail (<70)
+                              pass (>=75)  fail (<75)
                                    |         |
                                    |    auto-improve
                                    |         |
@@ -336,13 +336,11 @@ X / Instagram (TOFU)       note free (MOFU)        note paid (BOFU)
 
 ---
 
-## Capability Levels
+## 動作要件
 
-| Level | 要件 | 機能 |
-|---|---|---|
-| **Level 1** | Claude Code + WebSearch | テキストコンテンツ生成（全機能利用可能） |
-| **Level 2** | + gemini-image or fal.ai MCP | テキスト + 画像自動生成 |
-| **Level 3** | + X API credentials | テキスト + 画像 + X自動投稿 |
+- **Claude Code** (claude.ai/code)
+- **WebSearch** が有効（トレンド調査に使用）
+- Python 3.8+（スクリプト実行用、通常はClaude Codeに同梱）
 
 ---
 
@@ -404,7 +402,7 @@ python3 test_scripts.py  # 23テスト全通過を確認
 
 ## Demo Video
 
-[3分デモ動画撮影ガイド](./DEMO_SCRIPT.md) — ナレーション台本・操作手順・撮影Tips
+> デモ動画は準備中です。[撮影ガイド](./DEMO_SCRIPT.md)にナレーション台本・操作手順があります。
 
 ---
 
