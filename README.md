@@ -73,7 +73,8 @@ Claude Code plugin for fully autonomous content creation.<br>
 
 ```bash
 # インストール（Claude Code内で実行）
-/plugin marketplace add content-autopilot
+/plugin marketplace add FP-sudo/content-autopilot
+/plugin install content-autopilot@content-autopilot
 
 # 実行（必要なのはこれだけ）
 /daily-autopilot
