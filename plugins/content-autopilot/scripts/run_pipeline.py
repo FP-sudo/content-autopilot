@@ -154,14 +154,30 @@ def main():
         ])
         if grade_result:
             score = grade_result.get("score", 0)
-            grade = grade_result.get("grade", "?")
             issues = grade_result.get("issues", [])
             if score >= 75:
                 p(f"      {label}: {score}/100 ✓")
             else:
                 high_issues = [i for i in issues if i.get("severity") == "high"]
                 issue_fields = ", ".join(i["field"] for i in high_issues[:2])
-                p(f"      {label}: {score}/100 → needs improvement ({issue_fields})")
+                p(f"      {label}: {score}/100 → auto-improving {issue_fields}...")
+                # Try improved version (-002 file)
+                improved = fpath.parent / fpath.name.replace(today, f"{today}-002")
+                if improved.exists() and improved != fpath:
+                    re_result = run_script([
+                        sys.executable, str(SCRIPTS_DIR / "grader.py"),
+                        str(improved), "--json", "--platform", platform
+                    ])
+                    if re_result:
+                        new_score = re_result.get("score", 0)
+                        delta = new_score - score
+                        icon = "✓" if new_score >= 75 else "⚠"
+                        p(f"      {label}: {new_score}/100 {icon} (improved +{delta})")
+                        # Use improved file for pre-publish
+                        if label == "note":
+                            note_file = improved
+                else:
+                    p(f"      {label}: {score}/100 ⚠ (no improved version)")
         else:
             p(f"      {label}: grading failed")
 

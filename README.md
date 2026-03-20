@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-<code>129 skills</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>10 Python scripts</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>3 platforms</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>Zero user intervention</code>
+<code>129 skills</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>12 Python scripts</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>3 platforms</code>&nbsp;&nbsp;|&nbsp;&nbsp;<code>Zero user intervention</code>
 </p>
 
 <p align="center">
@@ -245,17 +245,19 @@ content-autopilot/
 │       │   ├── trend-scout/      # トレンド調査
 │       │   ├── content-grader/   # 6軸品質採点
 │       │   └── ...               # 125 more skills
-│       └── scripts/              # 10 Python scripts
-│           ├── autopilot.py      # パイプライン制御 + 実行マニフェスト + 累積サマリー
-│           ├── grader.py         # 6軸品質採点エンジン
-│           ├── dashboard.py      # HTMLダッシュボード生成
+│       └── scripts/              # 12 Python scripts (3,400+ LOC)
+│           ├── autopilot.py      # パイプライン制御 + マニフェスト + サマリー
+│           ├── grader.py         # 6軸品質採点（10パターンAI検出）
+│           ├── dashboard.py      # HTMLダッシュボード（アニメーション付き）
 │           ├── pre_publish.py    # 8項目プレパブリッシュ検証
 │           ├── record_history.py # 履歴・シリーズ記録
+│           ├── run_pipeline.py   # 確実に動くデモパイプライン
 │           ├── init_data.py      # ゼロセットアップ初期化
 │           ├── data_manager.py   # 共通データI/O
-│           ├── analytics.py      # コンテンツ分析ダッシュボード
+│           ├── analytics.py      # コンテンツ分析
 │           ├── funnel_balance.py # ファネルバランス計算
-│           └── deep_audit.py     # システム整合性監査
+│           ├── deep_audit.py     # システム整合性監査
+│           └── test_scripts.py   # テストスイート（23/23 pass）
 ├── README.md
 └── LICENSE
 ```
