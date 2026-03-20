@@ -385,6 +385,19 @@ Claude Code 内で以下を実行:
 > プロフィール未作成でも自動生成されるため、初回から即実行可能です。
 > カスタマイズしたい場合は `/setup-profile` を実行してください。
 
+### パイプラインの確認（ターミナルから直接実行）
+
+```bash
+# Claude Code外からでもパイプラインの全ステップを確認できます
+cd content-autopilot/plugins/content-autopilot/scripts
+python3 run_pipeline.py
+```
+
+テスト実行:
+```bash
+python3 test_scripts.py  # 23テスト全通過を確認
+```
+
 ---
 
 ## Demo Video
