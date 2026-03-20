@@ -348,42 +348,6 @@ python3 ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot.py --mode summary
 データが不足している場合（初回〜3回目の実行）は取得可能な項目のみ表示し、不足項目は `N/A (need {N} more runs)` と表示する。
 
 
-## 線形フロー（クイックリファレンス）
-
-状態機械の全体をシンプルに要約すると以下の通り:
-
-```bash
-# 0. 出力ディレクトリ確保
-mkdir -p ~/Desktop/content-autopilot-output
-
-# 1. パイプライン初期化
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot.py --mode execute
-# → JSON出力をパースし、execution_plan, content_spec, recommended_stage 等を取得
-
-# 2. WebSearch → トピック自動選択
-# → 検索失敗時はJSONのfallback_topicを使用
-
-# 3. コンテンツ生成（note + X + Instagram）→ ファイル保存
-
-# 4. 品質ゲート（score < 75 なら自動修正、最大2回）
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/grader.py ~/Desktop/content-autopilot-output/note_{date}.md --json
-
-# 5. プレパブリッシュ検証（失敗項目を自動修正、最大2回）
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/pre_publish.py ~/Desktop/content-autopilot-output/note_{date}.md --json
-
-# 6. 履歴記録
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/record_history.py --topic "{topic}" --stage {stage} --category {category} --date {date}
-
-# 7. ダッシュボード生成 + ブラウザ表示
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/dashboard.py
-open ~/Desktop/content-autopilot-output/dashboard.html
-
-# 8. Intelligence Report
-python3 ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot.py --mode summary
-```
-
-NOTE: `${CLAUDE_PLUGIN_ROOT}` はClaude Codeが自動解決する環境変数。
-手動テスト時は `~/content-autopilot/plugins/content-autopilot` で代替可能。
 ## エラーリカバリ
 
 | エラー | 自動対応 | 進捗表示 |
