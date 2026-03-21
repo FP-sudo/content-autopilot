@@ -51,7 +51,9 @@ STATE: INIT (Step 1/8)
   → python3 ${CLAUDE_PLUGIN_ROOT}/scripts/autopilot.py --mode execute
   → status == "ready" → STATE: SEARCH
   → status == "error" && error == "profile_missing"
-    → python3 ${CLAUDE_PLUGIN_ROOT}/scripts/init_data.py 実行
+    → ユーザーに1つだけ質問する: 「どんなテーマのコンテンツを作りますか？（例: AI×ビジネス、英語学習、料理レシピ）」
+    → 回答を受け取ったら、python3 ${CLAUDE_PLUGIN_ROOT}/scripts/init_data.py 実行
+    → profile.jsonのtheme.mainをユーザーの回答で上書き
     → 再度 autopilot.py --mode execute
     → status == "ready" → STATE: SEARCH
     → 2回目もerror → エラー報告して終了
