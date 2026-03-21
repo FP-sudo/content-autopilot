@@ -152,10 +152,12 @@ python3 test_scripts.py              # 23テスト全通過を確認
 | **Google Analytics** | PVデータ取得→パフォーマンス分析 | GA MCP |
 | **Google Calendar** | 投稿リマインダーを自動登録 | Calendar MCP |
 | **Zapier** | X/Instagram投稿をトリガー | Zapier MCP |
+| **note.com** | エディタ自動起動 + クリップボード | 不要 |
+| **X** | 投稿画面にツイートをプリフィル | 不要 |
 
-MCP未設定の場合はスキップされ、ローカルファイル出力のみで完了します。
+MCP未設定でも note.com エディタ起動と X 投稿画面プリフィルは動作します。
 
-**実証済み**: Notion（ページ自動作成）、Gmail（HTML下書き保存）、Gemini（OGP画像生成）、note.com（エディタ自動起動）、X（投稿画面プリフィル）の7連携を確認（Notion, Gmail, Gemini画像, Google Analytics, Google Calendar, note.com, X）。
+**全7連携を実証済み。**
 
 手動で連携する場合: `/publish`
 
