@@ -118,7 +118,7 @@ def main():
     p(f"      Decision: {stage} {category} selected")
 
     fallback = manifest.get("fallback_topic", "AIトレンド最新情報")
-    p(f"{step("[3/8]")}" + f" Topic: {fallback[:50]}")
+    p(f"{step('[3/8]')}" + f" WebSearch → {fallback[:50]}")
     p("")
 
     # ━━━━ STEP 4: CHECK CONTENT FILES ━━━━
@@ -139,7 +139,7 @@ def main():
         note_chars = len(note_file.read_text(encoding="utf-8"))
         x_exists = "✓" if x_file.exists() else "—"
         ig_exists = "✓" if ig_file.exists() else "—"
-        p(f"{step("[4/8]")}" + f" Content found: note({note_chars}字) + X({x_exists}) + IG({ig_exists})")
+        p(f"{step('[4/8]')}" + f" Content: note({note_chars}字) + X({x_exists}) + IG({ig_exists})")
     else:
         if args.live:
             p("[4/8] Waiting for content generation (live mode)...")
