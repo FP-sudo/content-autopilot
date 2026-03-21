@@ -25,6 +25,23 @@ SCRIPTS_DIR = Path(__file__).parent
 OUTPUT_DIR = Path.home() / "Desktop" / "content-autopilot-output"
 DATA_DIR = Path.home() / ".content-autopilot"
 
+# ANSI colors for terminal output
+class C:
+    BOLD = "\033[1m"
+    DIM = "\033[2m"
+    GREEN = "\033[32m"
+    YELLOW = "\033[33m"
+    RED = "\033[31m"
+    CYAN = "\033[36m"
+    RESET = "\033[0m"
+
+def ok(text: str) -> str: return f"{C.GREEN}{text}{C.RESET}"
+def warn(text: str) -> str: return f"{C.YELLOW}{text}{C.RESET}"
+def err(text: str) -> str: return f"{C.RED}{text}{C.RESET}"
+def bold(text: str) -> str: return f"{C.BOLD}{text}{C.RESET}"
+def dim(text: str) -> str: return f"{C.DIM}{text}{C.RESET}"
+def step(text: str) -> str: return f"{C.CYAN}{text}{C.RESET}"
+
 
 def run_script(cmd: list[str]) -> dict | None:
     """Run a Python script and parse JSON output."""
@@ -57,7 +74,7 @@ def main():
 
     # ━━━━ BANNER ━━━━
     p("")
-    p("━━━━ Content Autopilot ━━━━━━━━━━━━━━━━━━")
+    p(bold("━━━━ Content Autopilot ━━━━━━━━━━━━━━━━━━"))
     p("")
 
     # ━━━━ STEP 1: INIT ━━━━
@@ -67,14 +84,14 @@ def main():
 
     if not manifest or manifest.get("status") != "ready":
         # Auto-init: create profile + sample content
-        p("[1/8] First run detected → initializing...")
+        p(f"{step('[1/8]')} First run detected → initializing...")
         run_script([sys.executable, str(SCRIPTS_DIR / "init_data.py")])
         manifest = run_script([
             sys.executable, str(SCRIPTS_DIR / "autopilot.py"), "--mode", "execute"
         ])
         if not manifest or manifest.get("status") != "ready":
-            p("[1/8] ✗ Pipeline init failed")
-            p("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+            p(f"{step('[1/8]')} {err('✗ Pipeline init failed')}")
+            p(bold("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"))
             sys.exit(1)
 
     stage = manifest.get("recommended_stage", "TOFU")
@@ -82,9 +99,9 @@ def main():
     was_auto = not DATA_DIR.joinpath("profile.json").exists() or manifest.get("status") == "ready"
 
     if was_auto:
-        p("[1/8] Profile loaded (auto-created: default)")
+        p(f"{step('[1/8]')} Profile loaded {ok('(auto-created: default)')}")
     else:
-        p("[1/8] Profile loaded")
+        p(f"{step('[1/8]')} Profile loaded")
     p(f'      Theme: "AI x ビジネス" | Stage: {stage}')
 
     p("")
@@ -97,11 +114,11 @@ def main():
     target_pct = targets.get(stage, 50)
     check = "✓" if abs(stage_pct - target_pct) <= 10 else "↑adjust"
 
-    p(f"[2/8] Funnel analysis: {stage} {stage_pct}% → target {target_pct}% {check}")
+    p(f"{step("[2/8]")}" + f" Funnel analysis: {stage} {stage_pct}% → target {target_pct}% {check}")
     p(f"      Decision: {stage} {category} selected")
 
     fallback = manifest.get("fallback_topic", "AIトレンド最新情報")
-    p(f"[3/8] Topic: {fallback[:50]}")
+    p(f"{step("[3/8]")}" + f" Topic: {fallback[:50]}")
     p("")
 
     # ━━━━ STEP 4: CHECK CONTENT FILES ━━━━
@@ -122,7 +139,7 @@ def main():
         note_chars = len(note_file.read_text(encoding="utf-8"))
         x_exists = "✓" if x_file.exists() else "—"
         ig_exists = "✓" if ig_file.exists() else "—"
-        p(f"[4/8] Content found: note({note_chars}字) + X({x_exists}) + IG({ig_exists})")
+        p(f"{step("[4/8]")}" + f" Content found: note({note_chars}字) + X({x_exists}) + IG({ig_exists})")
     else:
         if args.live:
             p("[4/8] Waiting for content generation (live mode)...")
@@ -137,7 +154,7 @@ def main():
     p("")
 
     # ━━━━ STEP 5: GRADE ━━━━
-    p("[5/8] Quality gate:")
+    p(f"{step("[5/8]")} Quality gate:")
     files_to_grade = [
         ("note", note_file),
         ("X", x_file),
@@ -156,7 +173,7 @@ def main():
             score = grade_result.get("score", 0)
             issues = grade_result.get("issues", [])
             if score >= 75:
-                p(f"      {label}: {score}/100 ✓")
+                p(f"      {label}: {ok(f'{score}/100 ✓')}")
             else:
                 high_issues = [i for i in issues if i.get("severity") == "high"]
                 issue_fields = ", ".join(i["field"] for i in high_issues[:2])
@@ -183,7 +200,7 @@ def main():
         total = check_result.get("total_checks", 0)
         all_pass = check_result.get("all_pass", False)
         icon = "✓" if all_pass else "⚠"
-        p(f"[6/8] Pre-publish: {passed}/{total} checks passed {icon}")
+        p(f"{step("[6/8]")}" + f" Pre-publish: {passed}/{total} checks passed {icon}")
     else:
         p("[6/8] Pre-publish: check failed ⚠")
 
@@ -202,7 +219,7 @@ def main():
     ])
     if record_result:
         entry_id = record_result.get("entry_id", today)
-        p(f"[7/8] History recorded: entry {entry_id}")
+        p(f"{step("[7/8]")}" + f" History recorded: entry {entry_id}")
     else:
         p("[7/8] History recording failed ⚠")
 
@@ -213,17 +230,17 @@ def main():
         sys.executable, str(SCRIPTS_DIR / "dashboard.py")
     ])
     if dash_result and dash_result.get("status") == "generated":
-        p("[7.5] Dashboard generated → opening in browser...")
+        p(f"{step("[7.5]")}" + " Dashboard generated → opening in browser...")
         dash_path = dash_result.get("path", str(OUTPUT_DIR / "dashboard.html"))
         subprocess.Popen(["open", dash_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
-        p("[7.5] Dashboard generation failed ⚠")
+        p(f"{step("[7.5]")}" + " Dashboard generation failed ⚠")
 
     p("")
 
     # ━━━━ STEP 8: INTELLIGENCE REPORT ━━━━
-    p("[8/8] Pipeline complete ✓")
-    p("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    p(f"{step("[8/8]")} {ok("Pipeline complete ✓")}")
+    p(bold("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"))
     p("")
 
     summary = run_script([
@@ -239,12 +256,12 @@ def main():
         fh = summary.get("funnel_health", {})
         balanced = "balanced ✓" if fh.get("balanced") else "imbalanced ⚠"
 
-        p("--- Intelligence Report ---")
+        p(bold("--- Intelligence Report ---"))
         p(f"Total runs: {total_runs} | Streak: {streak} days | Trend: {trend}")
         p(f"Best title logic: {best_name} ({best_pct}%)")
         p(f"Funnel health: TOFU {fh.get('TOFU', 0)}% / MOFU {fh.get('MOFU', 0)}% / BOFU {fh.get('BOFU', 0)}% ({balanced})")
     else:
-        p("--- Intelligence Report ---")
+        p(bold("--- Intelligence Report ---"))
         p("N/A (insufficient data)")
 
     p("")
@@ -253,7 +270,7 @@ def main():
     note_name = note_file.name if note_file.exists() else f"note_{today}.md"
     x_name = x_file.name if x_file.exists() else f"x_{today}.md"
     ig_name = ig_file.name if ig_file.exists() else f"instagram_{today}.md"
-    p("--- 次のステップ ---")
+    p(bold("--- 次のステップ ---"))
     p("")
     p(f"  note:  open ~/Desktop/content-autopilot-output/{note_name}")
     p(f"         → note.com で「投稿」→ マークダウン貼り付け")
