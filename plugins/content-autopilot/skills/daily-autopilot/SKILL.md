@@ -422,6 +422,17 @@ MCPツール `mcp__notion__API-post-page` が利用可能な場合:
 3. ページ内容 = マークダウン本文
 4. タグ: funnel_stage, category, date を付与
 
+
+### Gmail連携
+MCPツール mcp__claude_ai_Gmail__gmail_create_draft が利用可能な場合:
+1. 生成したnote記事をHTML形式のGmail下書きとして作成
+2. 宛先: ユーザー自身（レビュー用）
+3. 件名: "[Content Autopilot] {topic} | {date} | {stage} | {score}/100"
+4. 本文: note記事のHTML変換版
+
+  Output to user (成功):
+    [7.76] Gmail → 下書き保存 ✓
+
 ### Zapier連携
 MCPツール `mcp__claude_ai_Zapier__get_configuration_url` が利用可能な場合:
 1. Zapierの設定URLを取得してユーザーに表示
