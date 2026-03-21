@@ -295,7 +295,7 @@ def main():
     else:
         print(f"  EXISTS  {PROFILE_PATH.name}")
 
-    print(init_file(HISTORY_PATH, SAMPLE_HISTORY, force))
+    print(init_file(HISTORY_PATH, EMPTY_HISTORY, force))
     print(init_file(SERIES_PATH, EMPTY_SERIES, force))
 
     # Create sample content files if they don't exist
