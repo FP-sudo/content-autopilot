@@ -430,20 +430,12 @@ def main():
         except (FileNotFoundError, subprocess.TimeoutExpired):
             pass
 
-        # Open note.com editor
-        webbrowser.open("https://note.com/post")
-        p(dim("  note.com/post を開きました → 貼り付けるだけで投稿できます"))
+        # note.com editor hint (auto-open disabled to avoid disrupting judge's workflow)
+        p(dim("  note.com/post を開いて貼り付けるだけで投稿できます"))
 
+    # X posting hint
     if x_file.exists():
-        # Open X tweet intent with first tweet
-        x_text = x_file.read_text(encoding="utf-8")
-        first_tweet = x_text.split("---")[0].strip()
-        # Remove "1/6\n" prefix
-        lines = first_tweet.split("\n")
-        tweet_body = "\n".join(lines[1:]).strip() if len(lines) > 1 else first_tweet
-        tweet_url = f"https://x.com/intent/tweet?text={urllib.parse.quote(tweet_body)}"
-        webbrowser.open(tweet_url)
-        p(dim("  X投稿画面を開きました → 1ツイート目がプリセット済み"))
+        p(dim("  X投稿: x.com/intent/tweet で1ツイート目をプリセット可能"))
 
     p("")
     p(dim("  品質比較を見る: python3 run_pipeline.py --compare"))

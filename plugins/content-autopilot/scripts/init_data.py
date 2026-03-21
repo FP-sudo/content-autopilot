@@ -17,6 +17,32 @@ from data_manager import (
     ensure_data_dir, ensure_output_dir, load_json, save_json, now_iso,
 )
 
+SAMPLE_HISTORY = {
+    "version": "1.0",
+    "entries": [
+        {
+            "id": "2026-03-19-001", "date": "2026-03-19",
+            "topic": "リモートワーク効率化の5つの秘訣",
+            "category": "trending", "funnel_stage": "TOFU",
+            "platforms": {"note": {"title": "", "file": "", "type": "free", "char_count": 2200},
+                          "x": {"title": "", "file": "", "format": "thread", "tweet_count": 6}},
+            "title_logics_used": ["Numbers", "Simplicity"],
+            "content_pillar": "Productivity", "source": "original", "series_id": None,
+            "ab_titles": {"chosen": "", "alternative": "", "winner": None}
+        },
+        {
+            "id": "2026-03-20-001", "date": "2026-03-20",
+            "topic": "ChatGPT vs Claude — プロが教える使い分け",
+            "category": "evergreen", "funnel_stage": "MOFU",
+            "platforms": {"note": {"title": "", "file": "", "type": "free", "char_count": 3100},
+                          "x": {"title": "", "file": "", "format": "thread", "tweet_count": 5},
+                          "instagram": {"title": "", "file": "", "hashtag_count": 28}},
+            "title_logics_used": ["Enemy", "Numbers"],
+            "content_pillar": "AI Tools", "source": "original", "series_id": None,
+            "ab_titles": {"chosen": "", "alternative": "", "winner": None}
+        },
+    ]
+}
 EMPTY_HISTORY = {"version": "1.0", "entries": []}
 
 EMPTY_SERIES = {"version": "1.0", "series": []}
@@ -251,7 +277,7 @@ def main():
     else:
         print(f"  EXISTS  {PROFILE_PATH.name}")
 
-    print(init_file(HISTORY_PATH, EMPTY_HISTORY, force))
+    print(init_file(HISTORY_PATH, SAMPLE_HISTORY, force))
     print(init_file(SERIES_PATH, EMPTY_SERIES, force))
 
     # Create sample content files if they don't exist
