@@ -118,7 +118,24 @@ def run_compare():
     p("")
     if r_naive and r_auto:
         delta = r_auto['score'] - r_naive['score']
-        p(bold(f"  差: +{delta}点"))
+        p(bold(f"  品質差: +{delta}点"))
+
+    # Show actual content side by side
+    p("")
+    p(bold("--- 冒頭の比較 ---"))
+    p("")
+    naive_lines = naive.strip().split('\n')[:4]
+    p(f"  {err('Claude直接')}:")
+    for line in naive_lines:
+        p(f"    {dim(line[:60])}")
+    p("")
+
+    if note_file.exists():
+        auto_lines = note_file.read_text(encoding='utf-8').strip().split('\n')[:4]
+        p(f"  {ok('Content Autopilot')}:")
+        for line in auto_lines:
+            p(f"    {line[:60]}")
+
     p("")
     p(bold("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"))
 
