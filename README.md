@@ -94,10 +94,8 @@ Content Autopilot: 94/100 (A) — AI臭ゼロ、2,000文字
 /plugin install content-autopilot@content-autopilot
 /daily-autopilot
 
-# ターミナルで（Claude Code不要）
-git clone https://github.com/FP-sudo/content-autopilot.git
-cd content-autopilot/plugins/content-autopilot/scripts
-python3 run_pipeline.py              # パイプライン実行
+# ターミナルで（Claude Code不要）— ワンライナーで試せます
+git clone https://github.com/FP-sudo/content-autopilot.git && cd content-autopilot/plugins/content-autopilot/scripts && python3 run_pipeline.py
 python3 run_pipeline.py --compare    # 品質比較デモ
 python3 test_scripts.py              # 23テスト確認
 ```

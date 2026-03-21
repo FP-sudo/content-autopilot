@@ -445,6 +445,10 @@ def main():
         webbrowser.open(tweet_url)
         p(dim("  X投稿画面を開きました → 1ツイート目がプリセット済み"))
 
+    p("")
+    p(dim("  品質比較を見る: python3 run_pipeline.py --compare"))
+
 
 if __name__ == "__main__":
     main()
+
