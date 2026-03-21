@@ -63,11 +63,76 @@ def p(text: str, delay: float = 0.05):
     time.sleep(delay)
 
 
+def run_compare():
+    """Compare naive Claude output vs Content Autopilot quality."""
+    p(bold("━━━━ 品質比較: Claude直接 vs Content Autopilot ━━━━"))
+    p("")
+
+    naive = (
+        "# AIを活用した業務効率化ガイド\n\n"
+        "本記事では、AIを活用した業務効率化について解説します。\n\n"
+        "## AIとは\n\nAIとは人工知能のことで、さまざまな方法で業務に活用できます。"
+        "ご存じの通り、近年AIの進化は目覚ましく、多くの企業が導入を進めています。\n\n"
+        "## AIの活用方法\n\n重要なことは、AIを正しく活用することです。\n\n"
+        "1. データ分析の自動化\n2. カスタマーサポートの効率化\n3. コンテンツ制作の支援\n\n"
+        "それぞれについて見ていきましょう。\n\n"
+        "### データ分析\n\nAIを使うことで、大量のデータを短時間で分析できます。\n\n"
+        "### カスタマーサポート\n\n一方で、AIをカスタマーサポートに導入することも効果的です。\n\n"
+        "### コンテンツ制作\n\n一方で、コンテンツ制作においてもAIは大きな力を発揮します。"
+        "記事の下書き作成、キーワード分析など、さまざまな場面で活用できます。\n\n"
+        "## まとめ\n\nいかがでしたか？AIの導入は難しく考える必要はありません。\n\n"
+        "フォローして最新情報をチェックしてください。続きはこちらの記事で。\n"
+    )
+
+    # Grade naive
+    import tempfile
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.md', delete=False, encoding='utf-8') as f:
+        f.write(naive)
+        naive_path = f.name
+
+    r_naive = run_script([sys.executable, str(SCRIPTS_DIR / "grader.py"), naive_path, "--json"])
+
+    # Grade autopilot content
+    note_file = OUTPUT_DIR / f"note_{datetime.now().strftime('%Y-%m-%d')}.md"
+    r_auto = None
+    if note_file.exists():
+        r_auto = run_script([sys.executable, str(SCRIPTS_DIR / "grader.py"), str(note_file), "--json"])
+
+    import os
+    os.unlink(naive_path)
+
+    p(f"  {err('Claude直接')}:         {r_naive['score']}/100 ({r_naive['grade']})" if r_naive else "  Claude直接: grading failed")
+    ai_naive = len([i for i in (r_naive or {}).get('issues', []) if i['field'] == 'ai_smell'])
+    p(f"    AI臭: {ai_naive}パターン検出")
+    p(f"    文字数: {r_naive['char_count']}" if r_naive else "")
+    p("")
+    if r_auto:
+        p(f"  {ok('Content Autopilot')}: {r_auto['score']}/100 ({r_auto['grade']})")
+        ai_auto = len([i for i in r_auto.get('issues', []) if i['field'] == 'ai_smell'])
+        p(f"    AI臭: {ai_auto}パターン検出")
+        p(f"    文字数: {r_auto['char_count']}")
+    else:
+        p(f"  Content Autopilot: (note未生成 — 先に run_pipeline.py を実行)")
+
+    p("")
+    if r_naive and r_auto:
+        delta = r_auto['score'] - r_naive['score']
+        p(bold(f"  差: +{delta}点"))
+    p("")
+    p(bold("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Content Autopilot Pipeline Runner")
     parser.add_argument("--live", action="store_true",
                         help="Live mode (expects content files to already exist)")
+    parser.add_argument("--compare", action="store_true",
+                        help="Compare naive Claude output vs Content Autopilot quality")
     args = parser.parse_args()
+
+    if args.compare:
+        run_compare()
+        return
 
     today = datetime.now().strftime("%Y-%m-%d")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

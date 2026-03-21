@@ -44,6 +44,19 @@ note: 82/100 ✓ (自動改善 +14点)
 
 人間の操作は最初の1コマンドだけ。所要時間は約2-3分です。
 
+### Claudeに直接頼んだ場合との違い
+
+| | Claudeに直接依頼 | Content Autopilot |
+|---|---|---|
+| **品質スコア** | 56/100 (D) | 94/100 (A) |
+| **AI臭検出** | 5パターン | 0パターン |
+| **文字数** | 655文字 | 2,000文字 |
+| **フック** | 「本記事では〜」 | 疑問・数字で読者を掴む |
+| **ファネル** | なし | TOFU/MOFU/BOFU自動選択 |
+| **品質保証** | なし | 6軸自動採点 + 自動改善 |
+
+同じClaude 4.6モデルを使っていても、品質ゲートとプラットフォーム最適化で**38点の差**が出ます。
+
 ---
 
 ## 生成例
@@ -100,8 +113,9 @@ AIを使ってるのに効率が上がらない人へ。
 ```bash
 git clone https://github.com/FP-sudo/content-autopilot.git
 cd content-autopilot/plugins/content-autopilot/scripts
-python3 run_pipeline.py    # パイプライン全体を実行
-python3 test_scripts.py    # 23テスト全通過を確認
+python3 run_pipeline.py              # パイプライン全体を実行
+python3 run_pipeline.py --compare    # Claude直接 vs Autopilotの品質比較
+python3 test_scripts.py              # 23テスト全通過を確認
 ```
 
 ---
