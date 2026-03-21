@@ -154,11 +154,11 @@ def run_compare():
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Content Autopilot Pipeline Runner")
+    parser = argparse.ArgumentParser(description="Content Autopilot — 自律型コンテンツ生成パイプライン")
     parser.add_argument("--live", action="store_true",
-                        help="Live mode (expects content files to already exist)")
+                        help="ライブモード（コンテンツファイルが既にある前提で実行）")
     parser.add_argument("--compare", action="store_true",
-                        help="Compare naive Claude output vs Content Autopilot quality")
+                        help="Claude直接 vs Content Autopilotの品質比較デモ")
     args = parser.parse_args()
 
     if args.compare:
