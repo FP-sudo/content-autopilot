@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Content Autopilot Dashboard — 2026-03-21</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#0d1117;
+  color:#c9d1d9;
+  line-height:1.6;
+  padding:2rem;
+  min-width:320px;
+}
+a{color:#58a6ff;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* Layout */
+.container{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  gap:1.5rem;
+}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){
+  .grid-2,.grid-3{grid-template-columns:1fr}
+}
+
+/* Header */
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1.5rem 2rem;
+  background:#161b22;
+  border-radius:12px;
+  border:1px solid #30363d;
+}
+.header h1{font-size:1.5rem;color:#e6edf3;font-weight:700}
+.header .date{color:#8b949e;font-size:0.95rem}
+
+/* Banner */
+.banner{
+  background:#161b2280;
+  border:1px solid #30363d;
+  border-radius:8px;
+  padding:0.75rem 1.25rem;
+  font-size:0.9rem;
+  color:#8b949e;
+  text-align:center;
+}
+
+/* Section */
+.section{
+  background:#161b22;
+  border:1px solid #30363d;
+  border-radius:12px;
+  padding:1.5rem;
+}
+.section h2{
+  font-size:1.1rem;
+  color:#e6edf3;
+  margin-bottom:1rem;
+  padding-bottom:0.5rem;
+  border-bottom:1px solid #21262d;
+}
+
+/* Cards */
+.card{
+  background:#0d1117;
+  border:1px solid #30363d;
+  border-radius:10px;
+  padding:1.25rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+}
+.card--empty{opacity:0.5}
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.card h3{font-size:1rem;color:#e6edf3}
+.badge{
+  display:inline-block;
+  padding:0.2rem 0.6rem;
+  border-radius:6px;
+  font-size:0.8rem;
+  font-weight:700;
+  color:#0d1117;
+}
+.preview{
+  font-size:0.85rem;
+  color:#8b949e;
+  white-space:pre-wrap;
+  word-break:break-word;
+  max-height:200px;
+  overflow-y:auto;
+  background:#161b22;
+  border-radius:6px;
+  padding:0.75rem;
+  font-family:inherit;
+  line-height:1.5;
+}
+.placeholder{
+  color:#484f58;
+  font-style:italic;
+  text-align:center;
+  padding:2rem 0;
+}
+
+/* Score bars */
+.bar-row{
+  display:grid;
+  grid-template-columns:180px 1fr 60px;
+  gap:0.75rem;
+  align-items:center;
+  margin-bottom:0.4rem;
+}
+.bar-label{
+  font-size:0.8rem;
+  color:#8b949e;
+  text-align:right;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bar-track{
+  height:18px;
+  background:#21262d;
+  border-radius:9px;
+  overflow:hidden;
+}
+.bar-fill{
+  height:100%;
+  border-radius:9px;
+  transition:width 0.6s ease;
+  transform-origin:left;
+  animation:barGrow 0.8s ease-out;
+}
+@keyframes barGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.bar-value{
+  font-size:0.8rem;
+  color:#c9d1d9;
+  font-weight:600;
+}
+
+/* Funnel chart */
+.funnel-group{margin-bottom:0.75rem}
+.funnel-label{font-size:0.8rem;color:#8b949e;margin-bottom:0.25rem}
+.funnel-bar{
+  display:flex;
+  height:32px;
+  border-radius:8px;
+  overflow:hidden;
+}
+.funnel-seg{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.75rem;
+  font-weight:600;
+  color:#0d1117;
+  min-width:40px;
+  white-space:nowrap;
+}
+.funnel-seg--target{opacity:0.6}
+
+/* Table */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.85rem;
+}
+th,td{
+  text-align:left;
+  padding:0.6rem 0.75rem;
+  border-bottom:1px solid #21262d;
+}
+th{
+  color:#8b949e;
+  font-weight:600;
+  font-size:0.8rem;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+td{color:#c9d1d9}
+tr:hover td{background:#161b2280}
+
+/* Intelligence */
+.intel-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:1rem;
+}
+@media(max-width:900px){
+  .intel-grid{grid-template-columns:repeat(2,1fr)}
+}
+.intel-card{
+  background:#0d1117;
+  border:1px solid #30363d;
+  border-radius:10px;
+  padding:1rem;
+  text-align:center;
+  animation:fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.intel-card .value{
+  font-size:1.5rem;
+  font-weight:700;
+  color:#e6edf3;
+  margin-bottom:0.25rem;
+}
+.intel-card .label{
+  font-size:0.75rem;
+  color:#8b949e;
+  text-transform:uppercase;
+  letter-spacing:0.05em;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>Content Autopilot Dashboard</h1>
+    <span class="date">v9.0 | 2026-03-21</span>
+  </div>
+
+  
+    <div class="banner">
+      &#128161; /setup-profile でテーマをカスタマイズできます
+    </div>
+
+  <!-- Intelligence Report -->
+  <div class="section">
+    <h2>Intelligence Report</h2>
+    <div class="intel-grid">
+      <div class="intel-card">
+        <div class="value">1</div>
+        <div class="label">Total Runs</div>
+      </div>
+      <div class="intel-card">
+        <div class="value">90.0</div>
+        <div class="label">Today's Quality</div>
+      </div>
+      <div class="intel-card">
+        <div class="value" style="color:#c9d1d9">&#8212;</div>
+        <div class="label">Activity Trend</div>
+      </div>
+      <div class="intel-card">
+        <div class="value">N/A</div>
+        <div class="label">Top Title Logic</div>
+      </div>
+      <div class="intel-card">
+        <div class="value" style="color:#c9d1d9">1d</div>
+        <div class="label">Streak</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Content -->
+  <div class="section">
+    <h2>Today's Content Preview</h2>
+    <div class="grid-3">
+      
+    <div class="card">
+      <div class="card-header">
+        <h3>Note</h3>
+        <span class="badge" style="background:#3fb950">A (94)</span>
+      </div>
+      <pre class="preview"># 3つのAI活用法で業務時間を半分にした話
+
+「AIを使ってるのに、なぜ効率が上がらないのか？」
+
+**この記事でわかること**
+- チャットボットとAIエージェントの決定的な違い
+- 実際に業務時間を50%削減した3つの方法
+- 明日から始められる導入ステップ
+
+そう感じたことはありませんか。ChatGPTに質問して、回答を読んで、また質問する。このサイクルを繰り返していると、ある疑問が浮かんできます。
+
+「これ、本当に効率化できているのか？」
+
+答えはNoです。断言できます。チャットボットに質問するだけでは、作業の主導権は人間のまま。本当の効率化は、AIが自律的に動く「エージェント」を活...</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>X (Twitter)</h3>
+        <span class="badge" style="background:#3fb950">B (86)</span>
+      </div>
+      <pre class="preview">1/6
+AIを使ってるのに効率が上がらない人へ。
+原因は「チャットボット止まり」だから。
+エージェントAIに切り替えたら世界が変わった。具体的に3つ共有する🧵
+
+---
+
+2/6
+①日次レポートの完全自動化
+データ収集→グラフ生成→Slack投稿まで全自動。
+人間がやるのは異常値チェックだけ。
+月10時間の削減。
+
+---
+
+3/6
+②カスタマーサポートの一次対応
+問い合わせの70%は定型質問。
+AIが感情分析→定型は自動回答→複雑案件だけ人間へ。
+対応速度3倍、満足度92%。
+
+---
+
+4/6
+③コンテンツ制作のパイプライン化
+トレンド調査→記事執筆→SNS書き分けを全自動化。
+1日3時間...</pre>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h3>Instagram</h3>
+        <span class="badge" style="background:#3fb950">A (90)</span>
+      </div>
+      <pre class="preview">AIを使っても効率が上がらない本当の理由、知っていますか？
+
+チャットボットに質問するだけでは、作業の主導権は人間のまま。
+本当の効率化は「AIエージェント」で実現する。
+
+実際に効果があった3つの方法:
+
+📊 日次レポート自動化 → 月10時間削減
+🤝 サポート一次対応 → 対応速度3倍
+📝 コンテンツ制作 → 1日3時間→15分
+
+まずは1つの繰り返しタスクから始めてみてください。
+詳しくはプロフィールのリンクからnote記事をチェックしてください👆
+
+#AI #AIエージェント #業務効率化 #自動化 #DX #生産性向上 #働き方改革 #ChatGPT #Claude #AIビジネス...</pre>
+    </div>
+    </div>
+  </div>
+
+  <!-- Scores + Funnel side-by-side -->
+  <div class="grid-2">
+    <div class="section">
+      <h2>Quality Scores</h2>
+      
+            <div class="bar-row">
+              <span class="bar-label">note / Hook</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">note / Readability</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:80%;background:#d29922"></div>
+              </div>
+              <span class="bar-value">8/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">note / Structure</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:90%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">9/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">note / Platform Fit</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">note / CTA</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">note / AI Smell</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / Hook</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / Readability</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:50%;background:#f85149"></div>
+              </div>
+              <span class="bar-value">5/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / Structure</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:70%;background:#f85149"></div>
+              </div>
+              <span class="bar-value">7/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / Platform Fit</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / CTA</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">x / AI Smell</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / Hook</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / Readability</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:70%;background:#f85149"></div>
+              </div>
+              <span class="bar-value">7/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / Structure</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:70%;background:#f85149"></div>
+              </div>
+              <span class="bar-value">7/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / Platform Fit</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / CTA</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+
+            <div class="bar-row">
+              <span class="bar-label">instagram / AI Smell</span>
+              <div class="bar-track">
+                <div class="bar-fill" style="width:100%;background:#3fb950"></div>
+              </div>
+              <span class="bar-value">10/10</span>
+            </div>
+    </div>
+    <div class="section">
+      <h2>Funnel Balance (TOFU / MOFU / BOFU)</h2>
+      
+    <div class="funnel-group">
+      <p class="funnel-label">Actual</p>
+      <div class="funnel-bar"><div class="funnel-seg" style="width:100.0%;background:#58a6ff">TOFU 100.0%</div>
+<div class="funnel-seg" style="width:0.0%;background:#d29922">MOFU 0.0%</div>
+<div class="funnel-seg" style="width:0.0%;background:#f85149">BOFU 0.0%</div>
+</div>
+    </div>
+    <div class="funnel-group">
+      <p class="funnel-label">Target</p>
+      <div class="funnel-bar"><div class="funnel-seg funnel-seg--target" style="width:50%;background:#58a6ff80">TOFU 50%</div>
+<div class="funnel-seg funnel-seg--target" style="width:30%;background:#d2992280">MOFU 30%</div>
+<div class="funnel-seg funnel-seg--target" style="width:20%;background:#f8514980">BOFU 20%</div>
+</div>
+    </div>
+    </div>
+  </div>
+
+  <!-- 7-Day History -->
+  <div class="section">
+    <h2>7-Day History</h2>
+    
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Topic</th><th>Stage</th><th>Category</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2026-03-21</td>
+          <td>AIの最新トレンド2026年版 — 知らないと損する5つのポイント</td>
+          <td>TOFU</td>
+          <td>trending</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+</div>
+
+  <footer style="text-align:center;padding:2rem;color:#484f58;font-size:0.75rem">
+    Content Autopilot v9.0 &mdash; Generated 2026-03-21
+  </footer>
+
+</body>
+</html>
