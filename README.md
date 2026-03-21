@@ -67,7 +67,7 @@ Content Autopilot: 94/100 (A) — AI臭ゼロ、2,000文字
 - 明日から始められる導入ステップ
 ```
 
-### ダッシュボード
+### ダッシュボード（[ライブデモ](https://fp-sudo.github.io/content-autopilot/)）
 
 ![Dashboard](docs/dashboard-screenshot.png)
 
