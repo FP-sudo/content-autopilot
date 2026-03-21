@@ -97,7 +97,7 @@ def test_grade_good_note():
 
 AIの活用は難しくありません。小さく始めて、効果を実感してから拡大しましょう。
 
-フォローしてもらえると嬉しいです。最新のAI活用事例を毎日お届けしています。続きはnoteの記事で詳しく解説しています。
+フォローしてもらえると嬉しいです。AI活用の最新事例をお届けしています。次回は実践編を公開予定です。
 """
     result = grade_content(good, "note")
     assert_true("good_passes", result["score"] >= 60)

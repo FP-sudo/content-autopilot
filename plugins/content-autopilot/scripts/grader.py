@@ -494,7 +494,7 @@ def grade_content(content: str, platform: str) -> dict:
         "issue_count": {"high": sum(1 for i in all_issues if i["severity"] == "high"),
                         "medium": sum(1 for i in all_issues if i["severity"] == "medium"),
                         "low": sum(1 for i in all_issues if i["severity"] == "low")},
-        "pass": total_score >= 70,
+        "pass": total_score >= 75,
     }
 
 
@@ -530,7 +530,7 @@ def format_human_readable(result: dict) -> str:
             lines.append(f"  [+] {rec}")
         lines.append("")
 
-    lines.append(f"判定: {'PASS' if result['pass'] else 'FAIL — スコア70以上で合格'}")
+    lines.append(f"判定: {'PASS' if result['pass'] else 'FAIL — スコア75以上で合格'}")
     lines.append("=" * 44)
 
     return "\n".join(lines)
