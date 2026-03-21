@@ -71,7 +71,7 @@ def test_grade_short_note():
     print("test_grade_short_note")
     short = "テスト記事。短すぎる内容。フォローしてね。"
     result = grade_content(short, "note")
-    assert_true("short_low_score", result["score"] < 70)
+    assert_true("short_low_score", result["score"] == 0)  # <50 chars = 0 score
     assert_true("has_issues", len(result["issues"]) > 0)
 
 
@@ -106,7 +106,7 @@ AIの活用は難しくありません。小さく始めて、効果を実感し
 
 def test_grade_ai_smell():
     print("test_grade_ai_smell")
-    smelly = "本記事ではさまざまな方法を紹介します。ご存じの通り、重要なことはAIです。いかがでしたか？"
+    smelly = "# AIについて\n\n本記事ではさまざまな方法を紹介します。ご存じの通り、重要なことはAIです。AIを使うと業務が効率化されます。具体的な方法を見ていきましょう。いかがでしたか？参考になれば幸いです。"
     result = grade_content(smelly, "note")
     ai_issues = [i for i in result["issues"] if i["field"] == "ai_smell"]
     assert_true("detects_ai_smell", len(ai_issues) >= 3)

@@ -413,6 +413,23 @@ def grade_ai_smell(content: str) -> tuple[int, list[dict]]:
 
 def grade_content(content: str, platform: str) -> dict:
     """Run all grading checks and return structured result."""
+    # Short-circuit for empty/near-empty content
+    if len(content.strip()) < 50:
+        return {
+            "score": 0,
+            "grade": "D",
+            "platform": platform,
+            "char_count": count_japanese_chars(content),
+            "kanji_ratio": 0,
+            "writing_style": "unknown",
+            "style_consistent": True,
+            "category_scores": {k: 0 for k in ["hook", "readability", "structure", "platform_fit", "cta", "ai_smell"]},
+            "issues": [{"field": "content", "action": "コンテンツがほぼ空です。最低2000文字のコンテンツを作成してください", "severity": "high"}],
+            "issue_count": {"high": 1, "medium": 0, "low": 0},
+            "pass": False,
+            "recommendations": [],
+        }
+
     checks = {
         "hook": grade_hook(content, platform),
         "readability": grade_readability(content),
