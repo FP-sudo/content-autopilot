@@ -1,5 +1,5 @@
 ---
-description: "生成済みコンテンツをNotion/Gmail/Zapierに連携する"
+description: "生成済みコンテンツをNotion/Gmailに連携する"
 disable-model-invocation: true
 ---
 
