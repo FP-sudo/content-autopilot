@@ -51,10 +51,10 @@ STATE: LEARN_STYLE (Step 0.5 — 文体学習)
     → 1の場合: MCPツール mcp__obsidian-mcp-tools__list_vault_files でファイル一覧取得
       → 最新5記事を mcp__obsidian-mcp-tools__get_vault_file で読み込み
     → 2の場合: WebFetchでnote記事を取得
-    → 3の場合: WebSearch("@username site:x.com") で過去ツイートを取得
-      → 取得できない場合（X はJS必須のため失敗しやすい）:
-        → ユーザーに「過去のツイートを5-10個テキストで貼り付けてください」と依頼
-        → または Obsidian/note/テキストファイルからの学習に切り替え
+    → 3の場合:
+      → X API MCPが利用可能なら: x-apiスキルでユーザーのタイムラインを直接取得（最も正確）
+      → X API MCPがなければ: WebSearch("@username site:x.com") を試行
+      → それでも取得できない場合: ユーザーに「過去のツイートを5-10個テキストで貼り付けてください」と依頼
     → 4の場合: Readツールでファイルを読み込み
     → 5の場合: スキップしてデフォルト文体を使用
     → 読み込んだ記事から以下を分析してprofile.jsonに保存:
@@ -88,10 +88,10 @@ STATE: LEARN_STYLE (Step 0.5 — 文体学習)
     → 1の場合: MCPツール mcp__obsidian-mcp-tools__list_vault_files でファイル一覧取得
       → 最新5記事を mcp__obsidian-mcp-tools__get_vault_file で読み込み
     → 2の場合: WebFetchでnote記事を取得
-    → 3の場合: WebSearch("@username site:x.com") で過去ツイートを取得
-      → 取得できない場合（X はJS必須のため失敗しやすい）:
-        → ユーザーに「過去のツイートを5-10個テキストで貼り付けてください」と依頼
-        → または Obsidian/note/テキストファイルからの学習に切り替え
+    → 3の場合:
+      → X API MCPが利用可能なら: x-apiスキルでユーザーのタイムラインを直接取得（最も正確）
+      → X API MCPがなければ: WebSearch("@username site:x.com") を試行
+      → それでも取得できない場合: ユーザーに「過去のツイートを5-10個テキストで貼り付けてください」と依頼
     → 4の場合: Readツールでファイルを読み込み
     → 5の場合: スキップしてデフォルト文体を使用
     → 読み込んだ記事から以下を分析してprofile.jsonに保存:
