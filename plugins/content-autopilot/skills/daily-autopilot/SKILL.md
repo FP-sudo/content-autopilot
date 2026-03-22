@@ -73,42 +73,6 @@ STATE: LEARN_STYLE (Step 0.5 — 文体学習)
   Output to user (スキップ):
     [0.5] Style: default（/setup-profileで文体学習可能）
 
-STATE: BANNER
-
-
-STATE: LEARN_STYLE (Step 0.5 — 文体学習)
-  → profile.jsonに style.learned == true があるか確認
-  → 未学習の場合:
-    → ユーザーに質問: 「文体を学習するために、過去の記事や投稿を読ませてください。以下から選んでください:
-      1. Obsidianのフォルダパスを教える（例: ブログ/公開済み）
-      2. noteの記事URLを教える
-      3. X（Twitter）のアカウント名を教える（例: @username）
-      4. テキストファイルのパスを教える
-      5. スキップ（デフォルトの文体を使用）」
-    → 1の場合: MCPツール mcp__obsidian-mcp-tools__list_vault_files でファイル一覧取得
-      → 最新5記事を mcp__obsidian-mcp-tools__get_vault_file で読み込み
-    → 2の場合: WebFetchでnote記事を取得
-    → 3の場合:
-      → X API MCPが利用可能なら: x-apiスキルでユーザーのタイムラインを直接取得（最も正確）
-      → X API MCPがなければ: WebSearch("@username site:x.com") を試行
-      → それでも取得できない場合: ユーザーに「過去のツイートを5-10個テキストで貼り付けてください」と依頼
-    → 4の場合: Readツールでファイルを読み込み
-    → 5の場合: スキップしてデフォルト文体を使用
-    → 読み込んだ記事から以下を分析してprofile.jsonに保存:
-      - 文体（です/ます体 or だ/である体）
-      - 1文の平均長
-      - よく使う接続詞
-      - 漢字率の傾向
-      - フックのパターン（疑問/数字/意外性）
-      - CTA のパターン
-      - 口癖や特徴的な表現
-    → profile.json の style.learned = true, style.analysis = {分析結果} に保存
-  → 学習済みの場合: スキップ
-
-  Output to user (学習実行):
-    [0.5] Style learning: {N}記事を分析 → 文体プロファイル作成 ✓
-  Output to user (スキップ):
-    [0.5] Style: default（/setup-profileで文体学習可能）
 
 STATE: BANNER (Step 0/8)
   → パイプライン開始のビジュアルヘッダーを表示
