@@ -97,7 +97,7 @@ Content Autopilot: 94/100 (A) — AI臭ゼロ、2,841文字
 ### ステップ1: インストール（Claude Codeで）
 
 ```bash
-/plugin marketplace add FP-sudo/content-autopilot
+/plugin marketplace add FP-sudo/agi-lab-skills-marketplace
 /plugin install content-autopilot@content-autopilot
 ```
 
