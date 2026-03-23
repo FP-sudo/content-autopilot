@@ -67,21 +67,21 @@ def build_platforms_dict(platforms_str: str, date: str, suffix: str, note_type: 
         if platform == "note":
             result["note"] = {
                 "title": "",
-                "file": f"note_{date}{file_suffix}.md",
+                "file": f"{date}/note_{date}{file_suffix}.md",
                 "type": note_type,
                 "char_count": note_chars,
             }
         elif platform == "x":
             result["x"] = {
                 "title": "",
-                "file": f"x_{date}{file_suffix}.md",
+                "file": f"{date}/x_{date}{file_suffix}.md",
                 "format": "thread",
                 "tweet_count": 0,
             }
         elif platform == "instagram":
             result["instagram"] = {
                 "title": "",
-                "file": f"instagram_{date}{file_suffix}.md",
+                "file": f"{date}/instagram_{date}{file_suffix}.md",
                 "hashtag_count": 0,
             }
 

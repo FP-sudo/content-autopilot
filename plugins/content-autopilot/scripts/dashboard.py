@@ -28,11 +28,15 @@ from grader import detect_platform, grade_content
 # ---------------------------------------------------------------------------
 
 _desktop = Path.home() / "Desktop"
-OUTPUT_DIR = (_desktop / "content-autopilot-output") if _desktop.is_dir() else (Path.home() / "content-autopilot-output")
+OUTPUT_BASE = (_desktop / "content-autopilot-output") if _desktop.is_dir() else (Path.home() / "content-autopilot-output")
 CONFIG_DIR = Path.home() / ".content-autopilot"
 HISTORY_FILE = CONFIG_DIR / "content-history.json"
 PROFILE_FILE = CONFIG_DIR / "profile.json"
-DASHBOARD_FILE = OUTPUT_DIR / "dashboard.html"
+
+
+def _output_dir_for_date(date_str: str) -> Path:
+    """Return date-specific output directory (e.g. .../2026-03-23/)."""
+    return OUTPUT_BASE / date_str
 
 
 # ---------------------------------------------------------------------------
@@ -96,14 +100,22 @@ PLATFORM_PREFIXES = [
 def discover_content(date_str: str) -> list[dict]:
     """Find generated content files for a given date and grade them.
 
+    Looks in the date subfolder first, then falls back to the flat base directory
+    for backward compatibility with older runs.
+
     Returns a list of dicts:
         {"platform": str, "path": Path|None, "content": str|None, "grade": dict|None}
     """
+    date_dir = _output_dir_for_date(date_str)
     results = []
     for platform, pattern in PLATFORM_PREFIXES:
         filename = pattern.format(date=date_str)
-        path = OUTPUT_DIR / filename
+        # Try date subfolder first, then flat base dir (backward compat)
+        path = date_dir / filename
         content = read_content_file(path)
+        if content is None:
+            path = OUTPUT_BASE / filename
+            content = read_content_file(path)
         grade = None
         if content is not None:
             grade = grade_content(content, platform)
@@ -702,6 +714,9 @@ def main() -> None:
     args = parser.parse_args()
 
     date_str: str = args.date
+    date_dir = _output_dir_for_date(date_str)
+    dashboard_file = date_dir / "dashboard.html"
+    root_dashboard = OUTPUT_BASE / "dashboard.html"
 
     # Load data
     profile, is_default_profile = load_profile()
@@ -711,12 +726,17 @@ def main() -> None:
     # Build HTML
     html = build_html(date_str, graded, history, profile, is_default_profile)
 
-    # Ensure output directory exists
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Ensure output directories exist
+    date_dir.mkdir(parents=True, exist_ok=True)
+    OUTPUT_BASE.mkdir(parents=True, exist_ok=True)
 
-    # Write dashboard
-    with open(DASHBOARD_FILE, "w", encoding="utf-8") as f:
+    # Write dashboard to date folder
+    with open(dashboard_file, "w", encoding="utf-8") as f:
         f.write(html)
+
+    # Also copy to root for quick access
+    import shutil
+    shutil.copy2(dashboard_file, root_dashboard)
 
     # Collect section names that have data
     sections = ["header", "intelligence"]
@@ -731,13 +751,13 @@ def main() -> None:
 
     result = {
         "status": "generated",
-        "path": str(DASHBOARD_FILE),
+        "path": str(dashboard_file),
         "sections": sections,
     }
     print(json.dumps(result, ensure_ascii=False))
 
     # Open in browser
-    webbrowser.open(DASHBOARD_FILE.as_uri())
+    webbrowser.open(dashboard_file.as_uri())
 
 
 if __name__ == "__main__":

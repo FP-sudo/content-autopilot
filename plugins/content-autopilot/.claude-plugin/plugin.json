@@ -1,6 +1,6 @@
 {
   "name": "content-autopilot",
-  "version": "9.0.0",
+  "version": "9.1.0",
   "description": "129-skill fully autonomous content OS — real-time progress display, HTML dashboard, cumulative intelligence, state machine orchestration, Japanese-native 6-axis grading, and script-based quality gates.",
   "author": {
     "name": "sudotakao"
